@@ -1,0 +1,11 @@
+select 
+case
+when ((Marks/10)+1)<8 then NULL
+else Name
+end as Names
+,
+case
+when Marks<100 then (Floor(Marks/10)+1)
+else 10
+end as Grade,Marks from Students
+order by Grade desc,Name;
