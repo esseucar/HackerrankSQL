@@ -1,0 +1,31 @@
+-- RANK() Example
+SELECT 
+  SaleID, 
+  Salesperson, 
+  SaleAmount, 
+  RANK() OVER (ORDER BY SaleAmount DESC) AS RankByAmount
+FROM Sales;
+
+-- DENSE_RANK() Example
+SELECT 
+  SaleID, 
+  Salesperson, 
+  SaleAmount, 
+  DENSE_RANK() OVER (ORDER BY SaleAmount DESC) AS DenseRankByAmount
+FROM Sales;
+
+-- ROW_NUMBER() Example
+SELECT 
+  SaleID, 
+  Salesperson, 
+  SaleAmount, 
+  ROW_NUMBER() OVER (ORDER BY SaleAmount DESC) AS RowNumByAmount
+FROM Sales;
+
+-- NTILE() Example
+SELECT 
+  SaleID, 
+  Salesperson, 
+  SaleAmount, 
+  NTILE(4) OVER (ORDER BY SaleAmount DESC) AS Quartile
+FROM Sales;
