@@ -1,0 +1,20 @@
+-- FIRST_VALUE() and LAST_VALUE() Example
+SELECT 
+  SaleID, 
+  Salesperson, 
+  SaleAmount, 
+  FIRST_VALUE(SaleAmount) OVER (ORDER BY SaleDate) AS FirstSaleAmount,
+  LAST_VALUE(SaleAmount)  OVER (ORDER BY SaleDate 
+                               RANGE BETWEEN UNBOUNDED PRECEDING AND 
+                               UNBOUNDED FOLLOWING
+                               ) AS LastSaleAmount
+FROM Sales;
+
+-- LEAD() and LAG() Example
+SELECT 
+  SaleID, 
+  Salesperson, 
+  SaleAmount, 
+  LAG(SaleAmount) OVER (ORDER BY SaleDate) AS PreviousSaleAmount,
+  LEAD(SaleAmount) OVER (ORDER BY SaleDate) AS NextSaleAmount
+FROM Sales;
