@@ -14,3 +14,25 @@ INNER JOIN Wands_Property AS b ON a.code = b.code
 WHERE b.is_evil = 0) as c
 where c.rn=1
 order by c.power desc, c.age desc
+
+--Second Way
+WITH RankedWands AS (
+    SELECT
+        a.id,
+        b.age,
+        a.coins_needed,
+        a.power,
+        ROW_NUMBER() OVER (PARTITION BY a.power, b.age ORDER BY a.coins_needed ASC) AS rn
+    FROM Wands AS a
+    INNER JOIN Wands_Property AS b ON a.code = b.code
+    WHERE b.is_evil = 0
+)
+
+SELECT
+    id,
+    age,
+    coins_needed,
+    power
+FROM RankedWands
+WHERE rn = 1
+ORDER BY power DESC, age DESC;
