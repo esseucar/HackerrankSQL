@@ -1,0 +1,16 @@
+select 
+    c.id,
+    c.age,
+    c.coins_needed,
+    c.power
+from(SELECT
+    a.id,
+    b.age,
+    a.coins_needed,
+    a.power,
+    DENSE_RANK() OVER (PARTITION BY a.power,b.age ORDER BY  a.coins_needed) AS rn
+FROM Wands AS a
+INNER JOIN Wands_Property AS b ON a.code = b.code
+WHERE b.is_evil = 0) as c
+where c.rn=1
+order by c.power desc, c.age desc
