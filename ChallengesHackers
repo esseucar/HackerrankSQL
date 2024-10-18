@@ -1,0 +1,40 @@
+WITH source_table AS (
+    SELECT 
+        h.hacker_id,
+        h.name,
+        COUNT(c.challenge_id) AS total
+    FROM 
+        Hackers h 
+    INNER JOIN 
+        Challenges c ON h.hacker_id = c.hacker_id
+    GROUP BY     
+        h.hacker_id, h.name
+),
+second_table AS (
+    SELECT 
+        *,
+        MAX(total) OVER () AS max_total,
+        IIF(MAX(total) OVER () = total, 1, 0) AS is_max
+    FROM 
+        source_table
+),
+grouped_totals AS (
+    SELECT 
+        total,
+        COUNT(*) AS count_of_hackers,
+        SUM(total) AS sum_of_totals
+    FROM 
+        second_table
+    GROUP BY 
+        total
+)
+SELECT 
+    st.hacker_id,
+    st.name,
+    st.total
+FROM 
+    second_table st
+LEFT JOIN 
+    grouped_totals gt ON st.total = gt.total
+WHERE st.is_max=1 or gt.count_of_hackers=1 
+order by st.total desc,st.hacker_id;
