@@ -1,0 +1,30 @@
+SET NOCOUNT ON;
+
+WITH StartPoints AS (
+    SELECT  p.Start_Date,
+            ROW_NUMBER() OVER (ORDER BY p.Start_Date) AS rn
+    FROM Projects p
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM Projects x
+        WHERE x.End_Date = p.Start_Date
+    )
+),
+EndPoints AS (
+    SELECT  p.End_Date,
+            ROW_NUMBER() OVER (ORDER BY p.End_Date) AS rn
+    FROM Projects p
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM Projects x
+        WHERE x.Start_Date = p.End_Date
+    )
+)
+SELECT  s.Start_Date,
+        e.End_Date
+FROM StartPoints s
+JOIN EndPoints   e  ON e.rn = s.rn
+ORDER BY DATEDIFF(DAY, s.Start_Date, e.End_Date) ASC,
+         s.Start_Date ASC;
+
+go
